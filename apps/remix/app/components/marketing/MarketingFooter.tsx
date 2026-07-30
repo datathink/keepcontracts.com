@@ -34,6 +34,14 @@ export function MarketingFooter() {
         </div>
         <div className="mt-10 flex flex-wrap justify-between gap-3 border-t pt-5 text-muted-foreground text-xs">
           <span>© {new Date().getFullYear()} DataThink. All rights reserved.</span>
+          <a
+            href="https://github.com/datathink/keepcontracts.com"
+            target="_blank"
+            rel="noreferrer"
+            className="transition-colors hover:text-foreground"
+          >
+            Source code (AGPL-3.0)
+          </a>
           <span>KeepContracts — secure document signing</span>
         </div>
       </div>
