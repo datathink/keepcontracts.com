@@ -128,7 +128,7 @@ export const OrganisationBillingBanner = () => {
 
                 <DialogDescription>
                   <Trans>
-                    Your plan is no longer valid. Please subscribe to a new plan to continue using Keep Contracts.
+                    Your plan is no longer valid. Please subscribe to a new plan to continue using KeepContracts.
                   </Trans>
                 </DialogDescription>
               </DialogHeader>

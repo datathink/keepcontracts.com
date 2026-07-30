@@ -1,14 +1,14 @@
-# Keep Contracts
+# KeepContracts
 
 Simple, secure document signing for DataThink's internal teams and products.
 
-Keep Contracts is a white-labeled, self-hosted document signing service built on top of [Documenso](https://documenso.com) (v2.11.0) and maintained by [DataThink](https://datathink.dev).
+KeepContracts is a white-labeled, self-hosted document signing service built on top of [Documenso](https://documenso.com) (v2.11.0) and maintained by [DataThink](https://datathink.dev).
 
 ## About
 
-Keep Contracts powers document signing workflows across DataThink's products. It is not a public SaaS product; accounts are provisioned by DataThink admins.
+KeepContracts powers document signing workflows across DataThink's products. It is not a public SaaS product; accounts are provisioned by DataThink admins.
 
-Documents are sent and managed via API. End recipients (contractors, parents, etc.) sign through a standard signing link without needing a Keep Contracts account.
+Documents are sent and managed via API. End recipients (contractors, parents, etc.) sign through a standard signing link without needing a KeepContracts account.
 
 ## Tech Stack
 

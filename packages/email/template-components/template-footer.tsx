@@ -31,7 +31,7 @@ export const TemplateFooter = ({ isDocument = true, reportUrl }: TemplateFooterP
 
       {isDocument && !branding.brandingHidePoweredBy && (
         <Text className="my-4 text-base text-muted-foreground">
-          <Trans>This document was sent using Keep Contracts.</Trans>
+          <Trans>This document was sent using KeepContracts.</Trans>
         </Text>
       )}
 

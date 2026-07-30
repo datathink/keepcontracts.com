@@ -32,14 +32,14 @@ export default function TermsPage() {
         </p>
 
         <p>
-          These Terms of Service ("Terms") govern your access to and use of Keep Contracts (the "Service"), operated by
+          These Terms of Service ("Terms") govern your access to and use of KeepContracts (the "Service"), operated by
           DataThink ("DataThink," "we," "us," or "our"). By creating an account or otherwise using the Service, you
           agree to these Terms. If you do not agree, do not use the Service.
         </p>
 
         <h2>1. The Service</h2>
         <p>
-          Keep Contracts is a document preparation, electronic signature, and contract management platform. We may add,
+          KeepContracts is a document preparation, electronic signature, and contract management platform. We may add,
           change, or remove features over time.
         </p>
 
@@ -78,14 +78,14 @@ export default function TermsPage() {
 
         <h2>6. Fees</h2>
         <p>
-          Keep Contracts is not currently a paid product. If paid plans are introduced in the future, this section will
+          KeepContracts is not currently a paid product. If paid plans are introduced in the future, this section will
           be updated and you will be notified in advance of any charges.
         </p>
 
         <h2>7. Intellectual Property</h2>
         <p>
-          Keep Contracts, DataThink, and associated names and logos are the property of DataThink. Nothing in these
-          Terms grants you any right to use our trademarks or branding without prior written permission.
+          KeepContracts, DataThink, and associated names and logos are the property of DataThink. Nothing in these Terms
+          grants you any right to use our trademarks or branding without prior written permission.
         </p>
 
         <h2>8. Termination</h2>

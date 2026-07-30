@@ -1,11 +1,11 @@
 import { i18n, type MessageDescriptor } from '@lingui/core';
 
 export const appMetaTags = (title?: MessageDescriptor) => {
-  const description = 'Keep Contracts — simple, secure document signing for your team.';
+  const description = 'KeepContracts — simple, secure document signing for your team.';
 
   return [
     {
-      title: title ? `${i18n._(title)} | Keep Contracts` : 'Keep Contracts',
+      title: title ? `${i18n._(title)} | KeepContracts` : 'KeepContracts',
     },
     {
       name: 'description',
@@ -13,7 +13,7 @@ export const appMetaTags = (title?: MessageDescriptor) => {
     },
     {
       name: 'keywords',
-      content: 'Keep Contracts, document signing, secure contracts, DataThink',
+      content: 'KeepContracts, document signing, secure contracts, DataThink',
     },
     {
       name: 'author',
@@ -25,7 +25,7 @@ export const appMetaTags = (title?: MessageDescriptor) => {
     },
     {
       property: 'og:title',
-      content: 'Keep Contracts',
+      content: 'KeepContracts',
     },
     {
       property: 'og:description',

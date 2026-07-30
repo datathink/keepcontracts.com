@@ -33,7 +33,7 @@ export default function PrivacyPage() {
 
         <p>
           This Privacy Policy explains how DataThink ("we," "us," or "our") collects, uses, and protects information
-          when you use Keep Contracts (the "Service").
+          when you use KeepContracts (the "Service").
         </p>
 
         <h2>1. Information We Collect</h2>
@@ -52,7 +52,7 @@ export default function PrivacyPage() {
           </li>
         </ul>
         <p>
-          Keep Contracts does not currently use third-party analytics or advertising tracking tools. If this changes,
+          KeepContracts does not currently use third-party analytics or advertising tracking tools. If this changes,
           this Policy will be updated before any such tool is introduced.
         </p>
 
@@ -78,7 +78,7 @@ export default function PrivacyPage() {
           your information, or when required by law.
         </p>
         <p>
-          Keep Contracts does not currently use a third-party payment processor. If billing is introduced in the future,
+          KeepContracts does not currently use a third-party payment processor. If billing is introduced in the future,
           this Policy will be updated to name the relevant provider before it is used.
         </p>
 
@@ -119,7 +119,7 @@ export default function PrivacyPage() {
 
         <h2>9. Children's Privacy</h2>
         <p>
-          Keep Contracts is not intended for use by anyone under 18. We do not knowingly collect personal information
+          KeepContracts is not intended for use by anyone under 18. We do not knowingly collect personal information
           from children.
         </p>
 

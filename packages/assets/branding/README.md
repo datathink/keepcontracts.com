@@ -1,6 +1,6 @@
 # Brand source files
 
-This folder is the single source of truth for Keep Contracts logo/icon artwork.
+This folder is the single source of truth for KeepContracts logo/icon artwork.
 
 - `logo-light.svg` / `logo-dark.svg` — full combo mark (icon + wordmark), for light-background and dark-background contexts respectively.
 - `icon-light.svg` / `icon-dark.svg` — icon-only mark, for light-background and dark-background contexts respectively. Also used as the source for the browser favicon and app-icon tiles.

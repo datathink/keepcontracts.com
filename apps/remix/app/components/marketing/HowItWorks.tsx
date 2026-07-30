@@ -37,7 +37,7 @@ export function HowItWorks() {
           centered
           eyebrow="How it works"
           title="From upload to signed in three steps"
-          description="Keep Contracts keeps the workflow frictionless, so getting a document signed takes minutes, not days."
+          description="KeepContracts keeps the workflow frictionless, so getting a document signed takes minutes, not days."
         />
       </motion.div>
 

@@ -775,7 +775,7 @@ export const EnvelopeEditorSettingsDialog = ({ trigger, ...props }: EnvelopeEdit
                                       </SelectItem>
                                     ))}
 
-                                    <SelectItem value={'-1'}>Keep Contracts</SelectItem>
+                                    <SelectItem value={'-1'}>KeepContracts</SelectItem>
                                   </SelectContent>
                                 </Select>
                               </FormControl>

@@ -1,6 +1,6 @@
-# Keep Contracts Code Style Guide
+# KeepContracts Code Style Guide
 
-This document captures the code style, patterns, and conventions used in the Keep Contracts codebase. It covers both enforceable rules and subjective "taste" elements that make our code consistent and maintainable.
+This document captures the code style, patterns, and conventions used in the KeepContracts codebase. It covers both enforceable rules and subjective "taste" elements that make our code consistent and maintainable.
 
 ## Table of Contents
 

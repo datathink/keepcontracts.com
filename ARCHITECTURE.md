@@ -1,12 +1,12 @@
-# Keep Contracts Architecture
+# KeepContracts Architecture
 
-This document provides a high-level overview of the Keep Contracts (KC) codebase to help humans and agents understand how the application is structured.
+This document provides a high-level overview of the KeepContracts (KC) codebase to help humans and agents understand how the application is structured.
 
 ---
 
-## Keep Contracts Product Overview
+## KeepContracts Product Overview
 
-**What Keep Contracts is:** A document signing engine (white-labeled Documenso), running at keepcontracts.com. It is invisible infrastructure. End users never interact with it directly. Signup is disabled and only DataThink admins have accounts.
+**What KeepContracts is:** A document signing engine (white-labeled Documenso), running at keepcontracts.com. It is invisible infrastructure. End users never interact with it directly. Signup is disabled and only DataThink admins have accounts.
 
 ### What is an Envelope
 
@@ -47,7 +47,7 @@ KC doesn't do this, the DataThink app does. When KC creates an envelope it retur
 
 ## Codebase Overview
 
-This section covers the technical architecture of the Keep Contracts codebase (forked from Documenso).
+This section covers the technical architecture of the KeepContracts codebase (forked from Documenso).
 
 ## Overview
 

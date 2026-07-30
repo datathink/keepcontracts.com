@@ -34,7 +34,7 @@ export function MarketingFooter() {
         </div>
         <div className="mt-10 flex flex-wrap justify-between gap-3 border-t pt-5 text-muted-foreground text-xs">
           <span>© {new Date().getFullYear()} DataThink. All rights reserved.</span>
-          <span>Keep Contracts — secure document signing</span>
+          <span>KeepContracts — secure document signing</span>
         </div>
       </div>
     </footer>

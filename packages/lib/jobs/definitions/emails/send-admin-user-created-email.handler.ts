@@ -60,7 +60,7 @@ export const run = async ({ payload, io }: { payload: TSendAdminUserCreatedEmail
       name: user.name || '',
     },
     from: KEEPCONTRACTS_INTERNAL_EMAIL,
-    subject: i18n._(msg`Welcome to Keep Contracts`),
+    subject: i18n._(msg`Welcome to KeepContracts`),
     html,
     text,
   });

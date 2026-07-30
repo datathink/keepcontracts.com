@@ -76,7 +76,7 @@ export const DocumentCertificateQRView = ({
 
               <DialogDescription>
                 <Trans>
-                  This document is available in your Keep Contracts account. You can view more details, recipients, and
+                  This document is available in your KeepContracts account. You can view more details, recipients, and
                   audit logs there.
                 </Trans>
               </DialogDescription>

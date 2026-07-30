@@ -39,7 +39,7 @@ export function MarketingHeader() {
     >
       <div className="mx-auto flex h-16 max-w-7xl items-center justify-between gap-4 px-6">
         {/* biome-ignore lint/a11y/useValidAnchor: real href for pre-hydration/no-JS fallback; onClick upgrades to a JS scroll to avoid a ScrollRestoration/native-hash-nav race (see scroll-to-section.ts) */}
-        <a href="#top" onClick={(event) => scrollToSection(event, 'top')} aria-label="Keep Contracts home">
+        <a href="#top" onClick={(event) => scrollToSection(event, 'top')} aria-label="KeepContracts home">
           <BrandingLogo className="h-7 w-auto" />
         </a>
 

@@ -116,7 +116,7 @@ export const AppNavMobile = ({ isMenuOpen, onMenuOpenChange }: AppNavMobileProps
           </div>
 
           <p className="text-muted-foreground text-sm">
-            © {new Date().getFullYear()} Keep Contracts, Inc.
+            © {new Date().getFullYear()} KeepContracts, Inc.
             <br />
             <Trans>All rights reserved.</Trans>
           </p>

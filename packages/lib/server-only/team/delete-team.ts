@@ -138,7 +138,7 @@ export const sendTeamDeleteEmail = async ({ email, team, organisationId }: SendT
   await emailTransport.sendMail({
     to: email,
     from: senderEmail,
-    subject: i18n._(msg`Team "${team.name}" has been deleted on Keep Contracts`),
+    subject: i18n._(msg`Team "${team.name}" has been deleted on KeepContracts`),
     html,
     text,
   });

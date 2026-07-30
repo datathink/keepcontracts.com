@@ -12,7 +12,7 @@ export function baseOptions(): BaseLayoutProps {
               transform="matrix(-0.195024,-0.378544,-0.378544,0.195024,756.376578,447.744850)"
             />
           </svg>
-          Keep Contracts
+          KeepContracts
         </span>
       ),
     },

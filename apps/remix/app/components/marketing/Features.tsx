@@ -78,7 +78,7 @@ export function Features() {
             centered
             eyebrow="Features"
             title="Everything you need to get documents signed"
-            description="From the first upload to the final signature — Keep Contracts covers the whole workflow without getting in your way."
+            description="From the first upload to the final signature — KeepContracts covers the whole workflow without getting in your way."
           />
         </motion.div>
         <motion.div
