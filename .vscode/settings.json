@@ -30,5 +30,12 @@
   },
   "[json]": {
     "editor.defaultFormatter": "vscode.json-language-features"
-  }
+  },
+  "VsCodeTaskButtons.tasks": [
+    { "label": "$(play) Dev", "task": "Dev", "tooltip": "Start the dev server" },
+    { "label": "$(check) PR Checks", "task": "PR Checks", "tooltip": "Run lint, typecheck, and build (mirrors CI)" },
+    { "label": "$(wrench) Lint Fix", "task": "Lint: Fix", "tooltip": "Auto-fix lint issues" },
+    { "label": "$(database) DB Up", "task": "DB: Up", "tooltip": "Start local Docker database" },
+    { "label": "$(table) Prisma Studio", "task": "Prisma Studio", "tooltip": "Open Prisma Studio" }
+  ]
 }

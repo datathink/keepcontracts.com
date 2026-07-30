@@ -1,0 +1,59 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "Dev",
+      "type": "npm",
+      "script": "dev",
+      "isBackground": true,
+      "presentation": {
+        "reveal": "always",
+        "panel": "dedicated"
+      },
+      "problemMatcher": []
+    },
+    {
+      "label": "Lint",
+      "type": "npm",
+      "script": "lint",
+      "problemMatcher": []
+    },
+    {
+      "label": "Lint: Fix",
+      "type": "npm",
+      "script": "lint:fix",
+      "problemMatcher": []
+    },
+    {
+      "label": "Typecheck",
+      "type": "shell",
+      "command": "npm run typecheck -w @documenso/remix",
+      "problemMatcher": ["$tsc"]
+    },
+    {
+      "label": "Build",
+      "type": "npm",
+      "script": "build",
+      "problemMatcher": []
+    },
+    {
+      "label": "DB: Up",
+      "type": "npm",
+      "script": "dx:up",
+      "problemMatcher": []
+    },
+    {
+      "label": "Prisma Studio",
+      "type": "npm",
+      "script": "prisma:studio",
+      "isBackground": true,
+      "problemMatcher": []
+    },
+    {
+      "label": "PR Checks",
+      "dependsOn": ["Lint", "Typecheck", "Build"],
+      "dependsOrder": "sequence",
+      "problemMatcher": []
+    }
+  ]
+}
