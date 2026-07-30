@@ -33,8 +33,18 @@
   },
   "VsCodeTaskButtons.tasks": [
     { "label": "$(play) Dev", "task": "Dev", "tooltip": "Start the dev server" },
-    { "label": "$(check) PR Checks", "task": "PR Checks", "tooltip": "Run lint, typecheck, and build (mirrors CI)" },
+    {
+      "label": "$(check) PR Checks",
+      "task": "PR Checks",
+      "tooltip": "Run lint, typecheck, unit tests, and build (mirrors CI)"
+    },
     { "label": "$(wrench) Lint Fix", "task": "Lint: Fix", "tooltip": "Auto-fix lint issues" },
+    { "label": "$(beaker) Test", "task": "Test", "tooltip": "Run unit tests (vitest)" },
+    {
+      "label": "$(beaker) Test: E2E",
+      "task": "Test: E2E",
+      "tooltip": "Run the full Playwright E2E suite (matches CI)"
+    },
     { "label": "$(database) DB Up", "task": "DB: Up", "tooltip": "Start local Docker database" },
     { "label": "$(table) Prisma Studio", "task": "Prisma Studio", "tooltip": "Open Prisma Studio" }
   ]

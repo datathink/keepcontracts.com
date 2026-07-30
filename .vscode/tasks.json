@@ -37,6 +37,19 @@
       "problemMatcher": []
     },
     {
+      "label": "Test",
+      "type": "shell",
+      "command": "npx turbo run test",
+      "problemMatcher": []
+    },
+    {
+      "label": "Test: E2E",
+      "type": "npm",
+      "script": "ci",
+      "detail": "Rebuilds the app and runs the full Playwright suite (matches CI) — requires the local DB to be up",
+      "problemMatcher": []
+    },
+    {
       "label": "DB: Up",
       "type": "npm",
       "script": "dx:up",
@@ -51,7 +64,7 @@
     },
     {
       "label": "PR Checks",
-      "dependsOn": ["Lint", "Typecheck", "Build"],
+      "dependsOn": ["Lint", "Typecheck", "Test", "Build"],
       "dependsOrder": "sequence",
       "problemMatcher": []
     }
