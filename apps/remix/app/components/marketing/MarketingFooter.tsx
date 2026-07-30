@@ -1,3 +1,5 @@
+import { Link } from 'react-router';
+
 import { BrandingLogo } from '~/components/general/branding-logo';
 
 import { scrollToSection } from './scroll-to-section';
@@ -5,6 +7,11 @@ import { scrollToSection } from './scroll-to-section';
 const PRODUCT_LINKS = [
   { label: 'Features', href: '#features' },
   { label: 'How it works', href: '#how-it-works' },
+];
+
+const LEGAL_LINKS = [
+  { label: 'Terms of Service', href: '/terms' },
+  { label: 'Privacy Policy', href: '/privacy' },
 ];
 
 export function MarketingFooter() {
@@ -29,6 +36,18 @@ export function MarketingFooter() {
               >
                 {link.label}
               </a>
+            ))}
+          </nav>
+          <nav aria-label="Legal" className="flex flex-col gap-2.5">
+            <div className="font-semibold text-[13px] text-foreground">Legal</div>
+            {LEGAL_LINKS.map((link) => (
+              <Link
+                key={link.label}
+                to={link.href}
+                className="text-[13px] text-muted-foreground transition-colors hover:text-foreground"
+              >
+                {link.label}
+              </Link>
             ))}
           </nav>
         </div>
