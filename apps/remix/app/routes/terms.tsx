@@ -81,7 +81,16 @@ export default function TermsPage() {
           and to allow us to process it as described in our Privacy Policy.
         </p>
 
-        <h2>6. Acceptable Use</h2>
+        <h2>6. Confidentiality</h2>
+        <p>
+          Documents and other non-public information exchanged through the Service may be confidential. Each party will
+          protect the other's confidential information with at least the same degree of care it uses to protect its own
+          confidential information, and in no event with less than a reasonable degree of care, and will use it only as
+          necessary to provide or use the Service. This does not apply to information that is or becomes publicly
+          available through no fault of the receiving party, or that must be disclosed by law.
+        </p>
+
+        <h2>7. Acceptable Use</h2>
         <p>You agree not to:</p>
         <ul>
           <li>Use the Service in violation of any applicable law or regulation;</li>
@@ -92,7 +101,7 @@ export default function TermsPage() {
           <li>Resell or commercially exploit the Service except as expressly permitted.</li>
         </ul>
 
-        <h2>7. AI-Assisted Features</h2>
+        <h2>8. AI-Assisted Features</h2>
         <p>
           The Service can use generative AI to suggest form fields and recipients within uploaded documents. These
           suggestions are produced automatically, may contain errors, and are provided for your convenience only. You
@@ -100,7 +109,7 @@ export default function TermsPage() {
           advice about the placement or sufficiency of any field or signature.
         </p>
 
-        <h2>8. Documents, Signatures, and Records</h2>
+        <h2>9. Documents, Signatures, and Records</h2>
         <p>
           The Service helps you prepare, send, and execute documents electronically, but you are solely responsible for
           determining whether an electronic signature is legally sufficient for your particular use case and
@@ -109,14 +118,14 @@ export default function TermsPage() {
           arising from such agreements.
         </p>
 
-        <h2>9. Fees</h2>
+        <h2>10. Fees</h2>
         <p>
           KeepContracts is not currently a paid product. If paid plans are introduced in the future, this section will
           be updated and you will be notified in advance of any charges. Unless required by law, fees are
           non-refundable.
         </p>
 
-        <h2>10. Third-Party Services</h2>
+        <h2>11. Third-Party Services</h2>
         <p>
           The Service relies on third-party providers, such as hosting, email delivery, document conversion,
           authentication, and generative AI providers, and may let you sign in using third-party accounts such as
@@ -124,15 +133,15 @@ export default function TermsPage() {
           responsible for third-party services.
         </p>
 
-        <h2>11. Intellectual Property</h2>
+        <h2>12. Intellectual Property</h2>
         <p>
           The Service, including its design, branding, and the KeepContracts and DataThink names and logos, is owned by
           DataThink and protected by intellectual property laws. Except for the rights expressly granted to you in these
-          Terms — including the open source rights described in Section 12 — we reserve all rights in the Service. You
+          Terms — including the open source rights described in Section 13 — we reserve all rights in the Service. You
           may not use our trademarks without our prior written permission.
         </p>
 
-        <h2>12. Open Source Software</h2>
+        <h2>13. Open Source Software</h2>
         <p>
           KeepContracts is built on{' '}
           <a href="https://documenso.com" target="_blank" rel="noreferrer">
@@ -151,7 +160,13 @@ export default function TermsPage() {
           .
         </p>
 
-        <h2>13. Termination</h2>
+        <h2>14. Feedback</h2>
+        <p>
+          If you send us suggestions, ideas, or other feedback about the Service, you agree that we may use it for any
+          purpose, including to improve the Service, without any obligation to compensate you.
+        </p>
+
+        <h2>15. Termination</h2>
         <p>
           You may stop using the Service at any time and may delete your account from the settings page. We may suspend
           or terminate your access if you violate these Terms, if required by law, or if necessary to protect the
@@ -163,7 +178,7 @@ export default function TermsPage() {
           continue to apply. Our handling of your data after termination is described in our Privacy Policy.
         </p>
 
-        <h2>14. Disclaimers</h2>
+        <h2>16. Disclaimers</h2>
         <p>
           The Service is provided "as is" and "as available" without warranties of any kind, whether express, implied,
           or statutory, including any implied warranties of merchantability, fitness for a particular purpose, and
@@ -171,7 +186,7 @@ export default function TermsPage() {
           content or output will be accurate.
         </p>
 
-        <h2>15. Limitation of Liability</h2>
+        <h2>17. Limitation of Liability</h2>
         <p>
           To the maximum extent permitted by law, DataThink and its affiliates will not be liable for any indirect,
           incidental, special, consequential, or punitive damages, or for any loss of profits, revenue, data, or
@@ -183,14 +198,14 @@ export default function TermsPage() {
           claim or one hundred US dollars (US$100).
         </p>
 
-        <h2>16. Indemnification</h2>
+        <h2>18. Indemnification</h2>
         <p>
           You agree to indemnify and hold harmless DataThink and its affiliates from any claims, damages, liabilities,
           and expenses (including reasonable legal fees) arising out of your use of the Service, Your Content, or your
           violation of these Terms or applicable law.
         </p>
 
-        <h2>17. Governing Law and Disputes</h2>
+        <h2>19. Governing Law and Disputes</h2>
         <p>
           These Terms are governed by the laws of the State of Idaho, United States, without regard to its conflict of
           law rules. You agree that any dispute arising out of or relating to these Terms or the Service will be subject
@@ -198,14 +213,14 @@ export default function TermsPage() {
           jurisdiction there.
         </p>
 
-        <h2>18. Changes to These Terms</h2>
+        <h2>20. Changes to These Terms</h2>
         <p>
           We may update these Terms from time to time. When we do, we will revise the "Last updated" date above and, for
           material changes, provide additional notice where required. Your continued use of the Service after an update
           means you accept the revised Terms.
         </p>
 
-        <h2>19. General</h2>
+        <h2>21. General</h2>
         <ul>
           <li>
             These Terms, together with the Privacy Policy, are the entire agreement between you and DataThink regarding
@@ -219,7 +234,7 @@ export default function TermsPage() {
           </li>
         </ul>
 
-        <h2>20. Contact Us</h2>
+        <h2>22. Contact Us</h2>
         <p>
           If you have questions about these Terms, contact us at{' '}
           <a href="mailto:mangelsona@datathink.dev">mangelsona@datathink.dev</a>.
