@@ -171,7 +171,7 @@ export const TokenCreateDialog = ({ trigger, ...props }: TokenCreateDialogProps)
               </DialogTitle>
 
               <DialogDescription>
-                <Trans>Use API tokens to authenticate with the Keep Contracts API.</Trans>
+                <Trans>Use API tokens to authenticate with the KeepContracts API.</Trans>
               </DialogDescription>
             </DialogHeader>
 

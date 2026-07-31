@@ -24,7 +24,7 @@ export const OrganisationInviteEmailTemplate = ({
 }: OrganisationInviteEmailProps) => {
   const { _ } = useLingui();
 
-  const previewText = msg`Accept invitation to join an organisation on Keep Contracts`;
+  const previewText = msg`Accept invitation to join an organisation on KeepContracts`;
 
   return (
     <Html>
@@ -42,7 +42,7 @@ export const OrganisationInviteEmailTemplate = ({
 
             <Section className="p-2 text-muted-foreground">
               <Text className="text-center font-medium text-foreground text-lg">
-                <Trans>Join {organisationName} on Keep Contracts</Trans>
+                <Trans>Join {organisationName} on KeepContracts</Trans>
               </Text>
 
               <Text className="my-1 text-center text-base">

@@ -15,11 +15,11 @@ export const TemplateAdminUserCreated = ({ resetPasswordLink, assetBaseUrl }: Te
 
       <Section className="flex-row items-center justify-center">
         <Text className="mx-auto mb-0 max-w-[80%] text-center font-semibold text-foreground text-lg">
-          <Trans>Welcome to Keep Contracts!</Trans>
+          <Trans>Welcome to KeepContracts!</Trans>
         </Text>
 
         <Text className="my-1 text-center text-base text-muted-foreground">
-          <Trans>An administrator has created a Keep Contracts account for you.</Trans>
+          <Trans>An administrator has created a KeepContracts account for you.</Trans>
         </Text>
 
         <Text className="my-1 text-center text-base text-muted-foreground">

@@ -45,7 +45,7 @@ services:
       - NEXT_PRIVATE_SMTP_PORT=2500
       - NEXT_PRIVATE_SMTP_USERNAME=keepcontracts
       - NEXT_PRIVATE_SMTP_PASSWORD=password
-      - NEXT_PRIVATE_SMTP_FROM_NAME="No Reply @ Keep Contracts"
+      - NEXT_PRIVATE_SMTP_FROM_NAME="No Reply @ KeepContracts"
       - NEXT_PRIVATE_SMTP_FROM_ADDRESS=noreply@keepcontracts.com
       - NEXT_PRIVATE_SIGNING_LOCAL_FILE_PATH=/opt/keepcontracts/cert.p12
     ports:

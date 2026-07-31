@@ -1,3 +1,5 @@
+import { Link } from 'react-router';
+
 import { BrandingLogo } from '~/components/general/branding-logo';
 
 import { scrollToSection } from './scroll-to-section';
@@ -5,6 +7,11 @@ import { scrollToSection } from './scroll-to-section';
 const PRODUCT_LINKS = [
   { label: 'Features', href: '#features' },
   { label: 'How it works', href: '#how-it-works' },
+];
+
+const LEGAL_LINKS = [
+  { label: 'Terms of Service', href: '/terms' },
+  { label: 'Privacy Policy', href: '/privacy' },
 ];
 
 export function MarketingFooter() {
@@ -31,10 +38,30 @@ export function MarketingFooter() {
               </a>
             ))}
           </nav>
+          <nav aria-label="Legal" className="flex flex-col gap-2.5">
+            <div className="font-semibold text-[13px] text-foreground">Legal</div>
+            {LEGAL_LINKS.map((link) => (
+              <Link
+                key={link.label}
+                to={link.href}
+                className="text-[13px] text-muted-foreground transition-colors hover:text-foreground"
+              >
+                {link.label}
+              </Link>
+            ))}
+          </nav>
         </div>
         <div className="mt-10 flex flex-wrap justify-between gap-3 border-t pt-5 text-muted-foreground text-xs">
           <span>© {new Date().getFullYear()} DataThink. All rights reserved.</span>
-          <span>Keep Contracts — secure document signing</span>
+          <a
+            href="https://github.com/datathink/keepcontracts.com"
+            target="_blank"
+            rel="noreferrer"
+            className="transition-colors hover:text-foreground"
+          >
+            Source code (AGPL-3.0)
+          </a>
+          <span>KeepContracts — secure document signing</span>
         </div>
       </div>
     </footer>

@@ -12,7 +12,7 @@ export type TemplateBrandingLogoProps = {
  *
  * - When custom branding is enabled with a logo, the branding logo is shown.
  *   If a safe (http/https) Brand Website is configured, the logo links to it.
- * - Otherwise the Keep Contracts logo is shown.
+ * - Otherwise the KeepContracts logo is shown.
  */
 export const TemplateBrandingLogo = ({ assetBaseUrl, className = 'mb-4 h-6' }: TemplateBrandingLogoProps) => {
   const branding = useBranding();
@@ -22,7 +22,7 @@ export const TemplateBrandingLogo = ({ assetBaseUrl, className = 'mb-4 h-6' }: T
   if (!hasCustomBrandingLogo) {
     const documensoLogoUrl = new URL('/static/logo.png?v=2', assetBaseUrl).toString();
 
-    return <Img src={documensoLogoUrl} alt="Keep Contracts Logo" className={className} />;
+    return <Img src={documensoLogoUrl} alt="KeepContracts Logo" className={className} />;
   }
 
   const brandingLogo = <Img src={branding.brandingLogo} alt="Branding Logo" className={className} />;

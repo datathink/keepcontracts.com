@@ -111,7 +111,7 @@ export const WebhookEditDialog = ({ trigger, webhook, ...props }: WebhookEditDia
                       </FormControl>
 
                       <FormDescription>
-                        <Trans>The URL for Keep Contracts to send webhook events to.</Trans>
+                        <Trans>The URL for KeepContracts to send webhook events to.</Trans>
                       </FormDescription>
 
                       <FormMessage />

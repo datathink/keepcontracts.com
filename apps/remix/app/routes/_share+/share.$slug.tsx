@@ -12,15 +12,15 @@ export function meta({ params: { slug } }: Route.MetaArgs) {
   }
 
   return [
-    { title: 'Keep Contracts - Share' },
-    { description: 'I just signed a document in style with Keep Contracts!' },
+    { title: 'KeepContracts - Share' },
+    { description: 'I just signed a document in style with KeepContracts!' },
     {
       property: 'og:title',
-      content: 'Keep Contracts - Join the open source signing revolution',
+      content: 'KeepContracts - Join the open source signing revolution',
     },
     {
       property: 'og:description',
-      content: 'I just signed with Keep Contracts!',
+      content: 'I just signed with KeepContracts!',
     },
     {
       property: 'og:type',
@@ -53,7 +53,7 @@ export const loader = async ({ request, params: { slug } }: Route.LoaderArgs) =>
     return {};
   }
 
-  // Is hardcoded because this whole meta is hardcoded anyway for Keep Contracts.
+  // Is hardcoded because this whole meta is hardcoded anyway for KeepContracts.
   throw redirect('https://keepcontracts.com');
 };
 

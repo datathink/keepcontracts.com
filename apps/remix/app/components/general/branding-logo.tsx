@@ -8,8 +8,8 @@ export type LogoProps = HTMLAttributes<HTMLImageElement>;
 export const BrandingLogo = ({ className, ...props }: LogoProps) => {
   return (
     <>
-      <img src={LogoLight} alt="Keep Contracts" className={cn(className, 'dark:hidden')} {...props} />
-      <img src={LogoDark} alt="Keep Contracts" className={cn(className, 'hidden dark:block')} {...props} />
+      <img src={LogoLight} alt="KeepContracts" className={cn(className, 'dark:hidden')} {...props} />
+      <img src={LogoDark} alt="KeepContracts" className={cn(className, 'hidden dark:block')} {...props} />
     </>
   );
 };

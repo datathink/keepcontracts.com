@@ -371,6 +371,20 @@ export const SignUpForm = ({
                 <Trans>Create account</Trans>
               </Button>
             )}
+
+            <p className="text-center text-muted-foreground text-xs">
+              <Trans>
+                By creating an account, you agree to our{' '}
+                <Link to="/terms" className="underline hover:text-foreground">
+                  Terms of Service
+                </Link>{' '}
+                and{' '}
+                <Link to="/privacy" className="underline hover:text-foreground">
+                  Privacy Policy
+                </Link>
+                .
+              </Trans>
+            </p>
           </form>
         </Form>
       </div>
