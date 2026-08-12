@@ -3,7 +3,6 @@ import { useSession } from '@documenso/lib/client-only/providers/session';
 import { formatAvatarUrl } from '@documenso/lib/utils/avatars';
 import { isAdmin } from '@documenso/lib/utils/is-admin';
 import { extractInitials } from '@documenso/lib/utils/recipient-formatter';
-import { LanguageSwitcherDialog } from '@documenso/ui/components/common/language-switcher-dialog';
 import { cn } from '@documenso/ui/lib/utils';
 import { AvatarWithText } from '@documenso/ui/primitives/avatar';
 import { Button } from '@documenso/ui/primitives/button';
@@ -18,15 +17,12 @@ import { msg } from '@lingui/core/macro';
 import { useLingui } from '@lingui/react';
 import { Trans } from '@lingui/react/macro';
 import { ChevronsUpDown, Plus } from 'lucide-react';
-import { useState } from 'react';
 import { Link } from 'react-router';
 
 export const MenuSwitcher = () => {
   const { _ } = useLingui();
 
   const { user } = useSession();
-
-  const [languageSwitcherOpen, setLanguageSwitcherOpen] = useState(false);
 
   const isUserAdmin = isAdmin(user);
 
@@ -86,10 +82,6 @@ export const MenuSwitcher = () => {
           </Link>
         </DropdownMenuItem>
 
-        <DropdownMenuItem className="px-4 py-2 text-muted-foreground" onClick={() => setLanguageSwitcherOpen(true)}>
-          <Trans>Language</Trans>
-        </DropdownMenuItem>
-
         <DropdownMenuItem
           className="hover:!text-destructive px-4 py-2 text-destructive/90"
           onSelect={async () => authClient.signOut()}
@@ -97,8 +89,6 @@ export const MenuSwitcher = () => {
           <Trans>Sign Out</Trans>
         </DropdownMenuItem>
       </DropdownMenuContent>
-
-      <LanguageSwitcherDialog open={languageSwitcherOpen} setOpen={setLanguageSwitcherOpen} />
     </DropdownMenu>
   );
 };
