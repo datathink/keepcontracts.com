@@ -1,16 +1,13 @@
 import { useDebouncedValue } from '@documenso/lib/client-only/hooks/use-debounced-value';
 import { useSession } from '@documenso/lib/client-only/providers/session';
-import { SUPPORTED_LANGUAGES } from '@documenso/lib/constants/i18n';
 import {
   DOCUMENTS_PAGE_SHORTCUT,
   SETTINGS_PAGE_SHORTCUT,
   TEMPLATES_PAGE_SHORTCUT,
 } from '@documenso/lib/constants/keyboard-shortcuts';
 import { DO_NOT_INVALIDATE_QUERY_ON_MUTATION, SKIP_QUERY_BATCH_META } from '@documenso/lib/constants/trpc';
-import { dynamicActivate } from '@documenso/lib/utils/i18n';
 import { isPersonalLayout } from '@documenso/lib/utils/organisations';
 import { trpc as trpcReact } from '@documenso/trpc/react';
-import { cn } from '@documenso/ui/lib/utils';
 import {
   CommandDialog,
   CommandEmpty,
@@ -20,13 +17,12 @@ import {
   CommandList,
   CommandShortcut,
 } from '@documenso/ui/primitives/command';
-import { useToast } from '@documenso/ui/primitives/use-toast';
 import type { MessageDescriptor } from '@lingui/core';
 import { msg } from '@lingui/core/macro';
 import { useLingui } from '@lingui/react';
 import { Trans } from '@lingui/react/macro';
 import { keepPreviousData } from '@tanstack/react-query';
-import { CheckIcon, Loader, Monitor, Moon, Sun } from 'lucide-react';
+import { Loader, Monitor, Moon, Sun } from 'lucide-react';
 import { useCallback, useMemo, useState } from 'react';
 import { useHotkeys } from 'react-hotkeys-hook';
 import { useNavigate } from 'react-router';
@@ -256,9 +252,6 @@ export function AppCommandMenu({ open, onOpenChange }: AppCommandMenuProps) {
             </CommandGroup>
 
             <CommandGroup className="mx-2 p-0 pb-2" heading={_(msg`Preferences`)}>
-              <CommandItem className="-mx-2 -my-1 rounded-lg" onSelect={() => addPage('language')}>
-                {_(msg`Change language`)}
-              </CommandItem>
               <CommandItem className="-mx-2 -my-1 rounded-lg" onSelect={() => addPage('theme')}>
                 {_(msg`Change theme`)}
               </CommandItem>
@@ -291,7 +284,6 @@ export function AppCommandMenu({ open, onOpenChange }: AppCommandMenuProps) {
         )}
 
         {currentPage === 'theme' && <ThemeCommands />}
-        {currentPage === 'language' && <LanguageCommands />}
       </CommandList>
     </CommandDialog>
   );
@@ -338,60 +330,6 @@ const ThemeCommands = () => {
     >
       <theme.icon className="mr-2" />
       {_(theme.label)}
-    </CommandItem>
-  ));
-};
-
-const LanguageCommands = () => {
-  const { i18n, _ } = useLingui();
-  const { toast } = useToast();
-
-  const [isLoading, setIsLoading] = useState(false);
-
-  const setLanguage = async (lang: string) => {
-    if (isLoading || lang === i18n.locale) {
-      return;
-    }
-
-    setIsLoading(true);
-
-    try {
-      await dynamicActivate(lang);
-
-      const formData = new FormData();
-
-      formData.append('lang', lang);
-
-      const response = await fetch('/api/locale', {
-        method: 'post',
-        body: formData,
-      });
-
-      if (!response.ok) {
-        throw new Error(response.statusText);
-      }
-    } catch (e) {
-      console.error(`Failed to set language: ${e}`);
-
-      toast({
-        title: _(msg`An unknown error occurred`),
-        variant: 'destructive',
-        description: _(msg`Unable to change the language at this time. Please try again later.`),
-      });
-    }
-
-    setIsLoading(false);
-  };
-
-  return Object.values(SUPPORTED_LANGUAGES).map((language) => (
-    <CommandItem
-      disabled={isLoading}
-      key={language.short}
-      onSelect={async () => setLanguage(language.short)}
-      className="mx-2 -my-1 rounded-lg first:mt-2 last:mb-2"
-    >
-      <CheckIcon className={cn('mr-2 h-4 w-4', i18n.locale === language.short ? 'opacity-100' : 'opacity-0')} />
-      {_(language.full)}
     </CommandItem>
   ));
 };
