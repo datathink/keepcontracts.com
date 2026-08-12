@@ -25,6 +25,7 @@ steps:
       - --image=${_IMAGE}
       - --region=us-west1
       - --project=$PROJECT_ID
+      - --service-account=keepcontracts-vertex-ai@keepcontracts.iam.gserviceaccount.com
 
 images:
   - ${_IMAGE}
