@@ -2,7 +2,7 @@
 
 Simple, secure document signing for DataThink's internal teams and products.
 
-KeepContracts is a white-labeled, self-hosted document signing service built on top of [Documenso](https://documenso.com) (v2.11.0) and maintained by [DataThink](https://datathink.dev).
+KeepContracts is a white-labeled, self-hosted document signing service built on top of [Documenso](https://documenso.com) (v2.18.0) and maintained by [DataThink](https://datathink.dev).
 
 ## About
 
@@ -87,7 +87,7 @@ npm run prisma:seed
 
 ## Upstream
 
-This project is a fork of [documenso/documenso](https://github.com/documenso/documenso) at v2.11.0, licensed under AGPLv3. Upstream documentation is available at [docs.documenso.com](https://docs.documenso.com).
+This project is a fork of [documenso/documenso](https://github.com/documenso/documenso) at v2.18.0, licensed under AGPLv3. Upstream documentation is available at [docs.documenso.com](https://docs.documenso.com).
 
 ## Support
 
