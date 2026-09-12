@@ -1,17 +1,22 @@
 import { mailer } from '@documenso/email/mailer';
 import { ResetPasswordTemplate } from '@documenso/email/templates/reset-password';
 import { prisma } from '@documenso/prisma';
+import { msg } from '@lingui/core/macro';
 import { createElement } from 'react';
+import { match } from 'ts-pattern';
 
+import { getI18nInstance } from '../../client-only/providers/i18n-server';
 import { NEXT_PUBLIC_WEBAPP_URL } from '../../constants/app';
 import { KEEPCONTRACTS_INTERNAL_EMAIL } from '../../constants/email';
+import type { TPasswordChangeSource } from '../../jobs/definitions/emails/send-password-reset-success-email';
 import { renderEmailWithI18N } from '../../utils/render-email-with-i18n';
 
 export interface SendResetPasswordOptions {
   userId: number;
+  source: TPasswordChangeSource;
 }
 
-export const sendResetPassword = async ({ userId }: SendResetPasswordOptions) => {
+export const sendResetPassword = async ({ userId, source }: SendResetPasswordOptions) => {
   const user = await prisma.user.findFirstOrThrow({
     where: {
       id: userId,
@@ -24,6 +29,7 @@ export const sendResetPassword = async ({ userId }: SendResetPasswordOptions) =>
     assetBaseUrl,
     userEmail: user.email,
     userName: user.name || '',
+    source,
   });
 
   const [html, text] = await Promise.all([
@@ -31,13 +37,20 @@ export const sendResetPassword = async ({ userId }: SendResetPasswordOptions) =>
     renderEmailWithI18N(template, { plainText: true }),
   ]);
 
+  const i18n = await getI18nInstance();
+
+  const subject = match(source)
+    .with('RESET', () => i18n._(msg`Password Reset Success!`))
+    .with('UPDATE', () => i18n._(msg`Your password was changed`))
+    .exhaustive();
+
   return await mailer.sendMail({
     to: {
       address: user.email,
       name: user.name || '',
     },
     from: KEEPCONTRACTS_INTERNAL_EMAIL,
-    subject: 'Password Reset Success!',
+    subject,
     html,
     text,
   });
