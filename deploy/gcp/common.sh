@@ -33,7 +33,7 @@ fi
 : "${SECRET_PREFIX:=$SERVICE}"
 : "${UPLOAD_TRANSPORT:=database}"
 : "${RUN_MEMORY:=2Gi}"
-: "${RUN_CPU:=2}"
+: "${RUN_CPU:=1}"
 : "${RUN_MIN_INSTANCES:=1}"
 : "${RUN_MAX_INSTANCES:=10}"
 : "${RUN_CONCURRENCY:=40}"

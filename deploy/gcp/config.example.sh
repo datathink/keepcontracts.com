@@ -40,7 +40,7 @@ export WEBAPP_URL="https://keepcontracts.com"
 # ─── Cloud Run sizing ────────────────────────────────────────────────────────
 
 export RUN_MEMORY="2Gi"
-export RUN_CPU="2"
+export RUN_CPU="1"
 # Keep at least 1 warm instance: the default in-process background-jobs provider
 # ("local") only runs scheduled work while an instance is alive.
 export RUN_MIN_INSTANCES="1"
