@@ -23,7 +23,7 @@ export SERVICE="keepcontracts"
 export DB_INSTANCE="keepcontracts-db"
 export DB_NAME="keepcontracts"
 export DB_USER="keepcontracts"
-export DB_TIER="db-custom-1-3840"
+export DB_TIER="db-g1-small"
 
 # Secrets are named "<SECRET_PREFIX>-enc-key", etc. Defaults to SERVICE.
 # export SECRET_PREFIX="keepcontracts"
@@ -40,7 +40,7 @@ export WEBAPP_URL="https://keepcontracts.com"
 # ─── Cloud Run sizing ────────────────────────────────────────────────────────
 
 export RUN_MEMORY="2Gi"
-export RUN_CPU="2"
+export RUN_CPU="1"
 # Keep at least 1 warm instance: the default in-process background-jobs provider
 # ("local") only runs scheduled work while an instance is alive.
 export RUN_MIN_INSTANCES="1"
