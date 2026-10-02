@@ -23,7 +23,7 @@ export SERVICE="keepcontracts"
 export DB_INSTANCE="keepcontracts-db"
 export DB_NAME="keepcontracts"
 export DB_USER="keepcontracts"
-export DB_TIER="db-custom-1-3840"
+export DB_TIER="db-g1-small"
 
 # Secrets are named "<SECRET_PREFIX>-enc-key", etc. Defaults to SERVICE.
 # export SECRET_PREFIX="keepcontracts"

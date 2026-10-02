@@ -47,7 +47,9 @@ fi
 
 if [[ -n "$DB_PASSWORD" ]]; then
   # Cloud Run connects over a unix socket at /cloudsql/<connection-name>.
-  DB_URL="postgresql://${DB_USER}:${DB_PASSWORD}@localhost/${DB_NAME}?host=/cloudsql/${CONNECTION_NAME}"
+  # connection_limit caps Prisma's per-instance pool so max instances x 4 stays
+  # under db-g1-small's 50-connection limit.
+  DB_URL="postgresql://${DB_USER}:${DB_PASSWORD}@localhost/${DB_NAME}?host=/cloudsql/${CONNECTION_NAME}&connection_limit=4"
   secret_put "$DB_URL_SECRET" "$DB_URL"
   info "Stored connection string in secret '${DB_URL_SECRET}'."
 fi

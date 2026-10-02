@@ -29,7 +29,7 @@ fi
 : "${DB_INSTANCE:=keepcontracts-db}"
 : "${DB_NAME:=keepcontracts}"
 : "${DB_USER:=keepcontracts}"
-: "${DB_TIER:=db-custom-1-3840}"
+: "${DB_TIER:=db-g1-small}"
 : "${SECRET_PREFIX:=$SERVICE}"
 : "${UPLOAD_TRANSPORT:=database}"
 : "${RUN_MEMORY:=2Gi}"
