@@ -56,8 +56,9 @@ health-check URL. Each step is idempotent — re-running is safe.
 | `02-secrets.sh` | Creates encryption/auth secrets + a self-signed signing cert; grants the runtime SA secret access and `cloudsql.client`. |
 | `03-build.sh` | Builds the image via Cloud Build (`../../cloudbuild.yaml`) and pushes to Artifact Registry. |
 | `04-deploy.sh` | Deploys the Cloud Run service with Cloud SQL, secrets and env wired in; resolves the public URL. |
+| `06-scheduler.sh` | Creates the Cloud Scheduler job that calls `POST /api/cron/run` once a day to run scheduled background jobs. |
 | `05-migrate-job.sh` | **Optional.** Runs migrations as a one-off Cloud Run Job (see *Migrations* below). |
-| `deploy-all.sh` | Runs steps 00→04 in order. |
+| `deploy-all.sh` | Runs steps 00→04, then 06, in order. |
 | `99-teardown.sh` | **Destructive.** Deletes everything created here (asks for confirmation). |
 
 ## Migrations
@@ -96,10 +97,15 @@ gcloud run domain-mappings create \
   (`NEXT_PRIVATE_SIGNING_TRANSPORT=gcloud-hsm` + the `*_GCLOUD_HSM_*` env vars —
   this app has first-class support for it). See
   <https://docs.documenso.com/developers/self-hosting/signing-certificate>.
-- **Background jobs** — defaults to the in-process `local` provider, which is
-  why `RUN_MIN_INSTANCES=1` and `--no-cpu-throttling` are set (a warm instance
-  with CPU always allocated is needed for scheduled work). For heavier setups,
-  switch to `bullmq` backed by Memorystore (Redis) or Inngest.
+- **Background jobs** — uses the in-process `local` provider. Scheduled jobs
+  (seal sweep, reminders, expirations, rate-limit cleanup, ...) don't use the
+  in-process timer (`NEXT_PRIVATE_JOBS_EXTERNAL_CRON=true`). Instead, Cloud
+  Scheduler calls `POST /api/cron/run` once a day (`CRON_SCHEDULE`), with
+  `Authorization: Bearer <cron-secret>`. That call runs every scheduled job once
+  and re-sends recent jobs whose dispatch was dropped. Because nothing needs CPU
+  between requests, you can set `RUN_MIN_INSTANCES=0` and
+  `RUN_CPU_THROTTLING=true` to scale to zero. For heavier setups, switch to
+  `bullmq` backed by Memorystore (Redis) or Inngest.
 
 ## Troubleshooting
 

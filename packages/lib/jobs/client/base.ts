@@ -2,6 +2,12 @@ import type { Context as HonoContext } from 'hono';
 
 import type { JobDefinition, SimpleTriggerJobOptions } from './_internal/job';
 
+// KeepContracts: result of runScheduledJobs(), keyed by job definition ID.
+export type ScheduledJobsResult = {
+  jobs: Record<string, 'completed' | 'skipped' | 'failed'>;
+  retriedCount: number;
+};
+
 export abstract class BaseJobProvider {
   // eslint-disable-next-line @typescript-eslint/require-await
   public async triggerJob(_options: SimpleTriggerJobOptions): Promise<void> {
@@ -25,5 +31,14 @@ export abstract class BaseJobProvider {
    */
   public startCron(): void {
     // No-op by default — providers override if needed.
+  }
+
+  /**
+   * KeepContracts: run all cron jobs once, triggered by an external scheduler.
+   * Only the local provider supports this.
+   */
+  // eslint-disable-next-line @typescript-eslint/require-await
+  public async runScheduledJobs(): Promise<ScheduledJobsResult> {
+    throw new Error('Not implemented');
   }
 }

@@ -13,6 +13,8 @@ CERT_SECRET="${SECRET_PREFIX}-signing-cert"
 PASSPHRASE_SECRET="${SECRET_PREFIX}-signing-passphrase"
 SMTP_PASSWORD_SECRET="${SECRET_PREFIX}-smtp-password"
 DB_URL_SECRET="${SECRET_PREFIX}-db-url"
+CRON_SECRET_NAME="${SECRET_PREFIX}-cron-secret"
+GOOGLE_CLIENT_SECRET_NAME="${SECRET_PREFIX}-google-client-secret"
 
 # Create a secret with a random 32-byte hex value only if it doesn't exist yet.
 ensure_random_secret() {
@@ -29,6 +31,7 @@ info "Creating encryption + auth secrets..."
 ensure_random_secret "$ENC_KEY_SECRET"
 ensure_random_secret "$ENC_SECONDARY_SECRET"
 ensure_random_secret "$NEXTAUTH_SECRET_NAME"
+ensure_random_secret "$CRON_SECRET_NAME"
 
 # ─── Signing certificate ─────────────────────────────────────────────────────
 
@@ -51,14 +54,26 @@ fi
 
 # ─── Optional secrets ────────────────────────────────────────────────────────
 
+# Write an optional secret only when its value changed, so re-runs stay idempotent.
+sync_optional_secret() {
+  local name="$1" value="$2" label="$3"
+  if secret_sync "$name" "$value"; then
+    info "Stored ${label} in secret '${name}'."
+  else
+    info "Secret '${name}' already up to date, leaving as-is."
+  fi
+}
+
 if [[ -n "${SIGNING_PASSPHRASE:-}" ]]; then
-  secret_put "$PASSPHRASE_SECRET" "$SIGNING_PASSPHRASE"
-  info "Stored signing passphrase in secret '${PASSPHRASE_SECRET}'."
+  sync_optional_secret "$PASSPHRASE_SECRET" "$SIGNING_PASSPHRASE" "signing passphrase"
 fi
 
 if [[ -n "${SMTP_PASSWORD:-}" ]]; then
-  secret_put "$SMTP_PASSWORD_SECRET" "$SMTP_PASSWORD"
-  info "Stored SMTP password in secret '${SMTP_PASSWORD_SECRET}'."
+  sync_optional_secret "$SMTP_PASSWORD_SECRET" "$SMTP_PASSWORD" "SMTP password"
+fi
+
+if [[ -n "${GOOGLE_CLIENT_SECRET:-}" ]]; then
+  sync_optional_secret "$GOOGLE_CLIENT_SECRET_NAME" "$GOOGLE_CLIENT_SECRET" "Google OAuth client secret"
 fi
 
 # ─── IAM ─────────────────────────────────────────────────────────────────────
@@ -72,9 +87,11 @@ secrets_to_bind=(
   "$NEXTAUTH_SECRET_NAME"
   "$CERT_SECRET"
   "$DB_URL_SECRET"
+  "$CRON_SECRET_NAME"
 )
 [[ -n "${SIGNING_PASSPHRASE:-}" ]] && secrets_to_bind+=("$PASSPHRASE_SECRET")
 [[ -n "${SMTP_PASSWORD:-}" ]] && secrets_to_bind+=("$SMTP_PASSWORD_SECRET")
+[[ -n "${GOOGLE_CLIENT_SECRET:-}" ]] && secrets_to_bind+=("$GOOGLE_CLIENT_SECRET_NAME")
 
 for s in "${secrets_to_bind[@]}"; do
   if secret_exists "$s"; then

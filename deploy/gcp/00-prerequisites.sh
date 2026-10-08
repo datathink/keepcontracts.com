@@ -11,7 +11,8 @@ gcloud_q services enable \
   sqladmin.googleapis.com \
   artifactregistry.googleapis.com \
   cloudbuild.googleapis.com \
-  secretmanager.googleapis.com
+  secretmanager.googleapis.com \
+  cloudscheduler.googleapis.com
 
 info "Ensuring Artifact Registry repository '${REPO}' exists in ${REGION}..."
 if gcloud_q artifacts repositories describe "$REPO" --location="$REGION" >/dev/null 2>&1; then

@@ -7,6 +7,7 @@ import type { Context as HonoContext } from 'hono';
 import { NEXT_PRIVATE_INTERNAL_WEBAPP_URL } from '../../constants/app';
 import { sign } from '../../server-only/crypto/sign';
 import { verify } from '../../server-only/crypto/verify';
+import { env } from '../../utils/env';
 import {
   type JobDefinition,
   type JobRunIO,
@@ -14,7 +15,7 @@ import {
   ZSimpleTriggerJobOptionsSchema,
 } from './_internal/job';
 import type { Json } from './_internal/json';
-import { BaseJobProvider } from './base';
+import { BaseJobProvider, type ScheduledJobsResult } from './base';
 
 /**
  * Build a deterministic BackgroundJob ID for a cron run so that multiple
@@ -36,6 +37,15 @@ type CronJobEntry = {
 
 const CRON_POLL_INTERVAL_MS = 30_000; // 30 seconds
 const CRON_POLL_JITTER_MS = 5_000; // 0-5 seconds random offset
+
+// KeepContracts: dropped-dispatch retry window for runScheduledJobs().
+const STUCK_JOB_MIN_AGE_MS = 15 * 60 * 1000; // 15 minutes
+const STUCK_JOB_MAX_AGE_MS = 48 * 60 * 60 * 1000; // 48 hours
+const STUCK_JOB_BATCH_SIZE = 100;
+
+// KeepContracts: a scheduled run still PROCESSING after this long was killed mid-run
+// (the cron request is capped at 300s by Cloud Run), so it can be reclaimed.
+const STALE_CRON_RUN_MS = 10 * 60 * 1000; // 10 minutes
 
 export class LocalJobProvider extends BaseJobProvider {
   private static _instance: LocalJobProvider;
@@ -98,6 +108,12 @@ export class LocalJobProvider extends BaseJobProvider {
     }
 
     if (this._cronJobs.length === 0) {
+      return;
+    }
+
+    // KeepContracts: an external scheduler calls runScheduledJobs() instead.
+    if (env('NEXT_PRIVATE_JOBS_EXTERNAL_CRON') === 'true') {
+      console.log('[JOBS]: External cron enabled, skipping in-process cron poller');
       return;
     }
 
@@ -188,6 +204,147 @@ export class LocalJobProvider extends BaseJobProvider {
     }
 
     return slots;
+  }
+
+  /**
+   * KeepContracts: run every registered cron job once, then re-dispatch recent
+   * jobs whose dispatch was dropped. Called once a day by an external scheduler
+   * (POST /api/cron/run) so Cloud Run doesn't need CPU between requests.
+   *
+   * Cron jobs run inline and are awaited. Each run's ID is keyed on the UTC
+   * date, so a repeat call on the same day only re-runs jobs that failed.
+   */
+  public override async runScheduledJobs(): Promise<ScheduledJobsResult> {
+    const results: ScheduledJobsResult['jobs'] = {};
+
+    const today = new Date(`${new Date().toISOString().slice(0, 10)}T00:00:00.000Z`);
+
+    for (const cronJob of this._cronJobs) {
+      const { definition } = cronJob;
+      const jobId = createCronRunId(definition.id, today);
+      const payload = { scheduledFor: today.toISOString() };
+
+      await prisma.backgroundJob
+        .create({
+          data: {
+            id: jobId,
+            jobId: definition.id,
+            name: definition.name,
+            version: definition.version,
+            payload,
+          },
+        })
+        .catch((error: unknown) => {
+          // P2002 = already created by an earlier call today.
+          if (error instanceof Prisma.PrismaClientKnownRequestError && error.code === 'P2002') {
+            return null;
+          }
+
+          throw error;
+        });
+
+      // Claim the run. Completed or in-progress runs are left alone, but a run stuck
+      // PROCESSING past the request timeout is reclaimed so a retry can finish it.
+      const claimed = await prisma.backgroundJob.updateMany({
+        where: {
+          id: jobId,
+          OR: [
+            { status: { in: [BackgroundJobStatus.PENDING, BackgroundJobStatus.FAILED] } },
+            {
+              status: BackgroundJobStatus.PROCESSING,
+              updatedAt: { lte: new Date(Date.now() - STALE_CRON_RUN_MS) },
+            },
+          ],
+        },
+        data: {
+          status: BackgroundJobStatus.PROCESSING,
+        },
+      });
+
+      if (claimed.count === 0) {
+        results[definition.id] = 'skipped';
+        continue;
+      }
+
+      try {
+        console.log(`[JOBS]: Running scheduled job ${definition.id}`);
+
+        await definition.handler({
+          payload: definition.trigger.schema ? definition.trigger.schema.parse(payload) : payload,
+          io: this.createJobRunIO(jobId),
+        });
+
+        await prisma.backgroundJob.update({
+          where: { id: jobId },
+          data: { status: BackgroundJobStatus.COMPLETED, completedAt: new Date() },
+        });
+
+        results[definition.id] = 'completed';
+      } catch (error) {
+        console.error(`[JOBS]: Scheduled job ${definition.id} failed`, error);
+
+        // Don't let a failed status write abort the remaining jobs. A row left
+        // PROCESSING is reclaimed by the next call once it goes stale.
+        await prisma.backgroundJob
+          .update({
+            where: { id: jobId },
+            data: { status: BackgroundJobStatus.FAILED, completedAt: new Date() },
+          })
+          .catch((updateError: unknown) => {
+            console.error(`[JOBS]: Failed to mark scheduled job ${definition.id} as failed`, updateError);
+          });
+
+        results[definition.id] = 'failed';
+      }
+    }
+
+    const retriedCount = await this.retryStuckJobs();
+
+    return { jobs: results, retriedCount };
+  }
+
+  /**
+   * KeepContracts: re-dispatch jobs left PENDING because their fire-and-forget
+   * dispatch was dropped. The job endpoint only claims PENDING rows, so a job that is
+   * dispatched twice still runs once. Old rows are ignored so we never re-send
+   * stale emails.
+   */
+  private async retryStuckJobs() {
+    const now = Date.now();
+
+    const stuckJobs = await prisma.backgroundJob.findMany({
+      where: {
+        status: BackgroundJobStatus.PENDING,
+        submittedAt: { gte: new Date(now - STUCK_JOB_MAX_AGE_MS) },
+        updatedAt: { lte: new Date(now - STUCK_JOB_MIN_AGE_MS) },
+        retried: { lt: prisma.backgroundJob.fields.maxRetries },
+      },
+      orderBy: { submittedAt: 'asc' },
+      take: STUCK_JOB_BATCH_SIZE,
+    });
+
+    const dispatchable = stuckJobs.filter((job) => this._jobDefinitions[job.jobId]);
+
+    console.log(`[JOBS]: Re-dispatching ${dispatchable.length} stuck job(s)`);
+
+    // Await each job to completion so this request keeps the instance's CPU allocated.
+    await Promise.allSettled(
+      dispatchable.map(async (job) =>
+        this.submitJobToEndpoint({
+          jobId: job.id,
+          jobDefinitionId: job.jobId,
+          data: {
+            name: this._jobDefinitions[job.jobId].trigger.name,
+            // eslint-disable-next-line @typescript-eslint/consistent-type-assertions
+            payload: job.payload as SimpleTriggerJobOptions['payload'],
+          },
+          isRetry: true,
+          waitForCompletion: true,
+        }),
+      ),
+    );
+
+    return dispatchable.length;
   }
 
   public async triggerJob(options: SimpleTriggerJobOptions) {
@@ -359,8 +516,9 @@ export class LocalJobProvider extends BaseJobProvider {
     jobDefinitionId: string;
     data: SimpleTriggerJobOptions;
     isRetry?: boolean;
+    waitForCompletion?: boolean;
   }) {
-    const { jobId, jobDefinitionId, data, isRetry } = options;
+    const { jobId, jobDefinitionId, data, isRetry, waitForCompletion } = options;
 
     const endpoint = `${NEXT_PRIVATE_INTERNAL_WEBAPP_URL()}/api/jobs/${jobDefinitionId}/${jobId}`;
     const signature = sign(data);
@@ -376,6 +534,12 @@ export class LocalJobProvider extends BaseJobProvider {
     }
 
     console.log('Submitting job to endpoint:', endpoint);
+
+    if (waitForCompletion) {
+      await fetch(endpoint, { method: 'POST', body: JSON.stringify(data), headers }).catch(() => null);
+      return;
+    }
+
     await Promise.race([
       fetch(endpoint, {
         method: 'POST',

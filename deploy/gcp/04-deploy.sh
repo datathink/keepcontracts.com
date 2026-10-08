@@ -19,6 +19,8 @@ env_kv=(
   "NEXT_PRIVATE_SIGNING_TRANSPORT=local"
   "NEXT_PRIVATE_SIGNING_LOCAL_FILE_PATH=/opt/documenso/cert.p12"
   "NEXT_PUBLIC_DISABLE_SIGNUP=${DISABLE_SIGNUP:-true}"
+  # Scheduled jobs run via Cloud Scheduler -> /api/cron/run (06-scheduler.sh).
+  "NEXT_PRIVATE_JOBS_EXTERNAL_CRON=true"
 )
 
 if [[ -n "${SMTP_HOST:-}" ]]; then
@@ -38,6 +40,20 @@ if [[ -n "${WEBAPP_URL:-}" ]]; then
   env_kv+=("NEXT_PUBLIC_WEBAPP_URL=${WEBAPP_URL}")
 fi
 
+if [[ -n "${GOOGLE_CLIENT_ID:-}" ]]; then
+  env_kv+=("NEXT_PRIVATE_GOOGLE_CLIENT_ID=${GOOGLE_CLIENT_ID}")
+fi
+
+# Vertex AI authenticates as the runtime service account (RUNTIME_SA), which
+# needs roles/aiplatform.user.
+if [[ -n "${GOOGLE_VERTEX_PROJECT_ID:-}" ]]; then
+  env_kv+=(
+    "GOOGLE_VERTEX_PROJECT_ID=${GOOGLE_VERTEX_PROJECT_ID}"
+    "GOOGLE_VERTEX_USE_ADC=true"
+  )
+  [[ -n "${GOOGLE_VERTEX_LOCATION:-}" ]] && env_kv+=("GOOGLE_VERTEX_LOCATION=${GOOGLE_VERTEX_LOCATION}")
+fi
+
 env_str="$(IFS='|'; printf '%s' "${env_kv[*]}")"
 
 # ─── Secrets ─────────────────────────────────────────────────────────────────
@@ -48,13 +64,23 @@ secret_kv=(
   "NEXTAUTH_SECRET=${SECRET_PREFIX}-nextauth:latest"
   "NEXT_PRIVATE_DATABASE_URL=${SECRET_PREFIX}-db-url:latest"
   "NEXT_PRIVATE_DIRECT_DATABASE_URL=${SECRET_PREFIX}-db-url:latest"
+  "NEXT_PRIVATE_CRON_SECRET=${SECRET_PREFIX}-cron-secret:latest"
   # Mounted as a file at the path the app reads the signing cert from.
   "/opt/documenso/cert.p12=${SECRET_PREFIX}-signing-cert:latest"
 )
 [[ -n "${SMTP_PASSWORD:-}" ]] && secret_kv+=("NEXT_PRIVATE_SMTP_PASSWORD=${SECRET_PREFIX}-smtp-password:latest")
 [[ -n "${SIGNING_PASSPHRASE:-}" ]] && secret_kv+=("NEXT_PRIVATE_SIGNING_PASSPHRASE=${SECRET_PREFIX}-signing-passphrase:latest")
+[[ -n "${GOOGLE_CLIENT_SECRET:-}" ]] && secret_kv+=("NEXT_PRIVATE_GOOGLE_CLIENT_SECRET=${SECRET_PREFIX}-google-client-secret:latest")
 
 secret_str="$(IFS=','; printf '%s' "${secret_kv[*]}")"
+
+# Request-based billing (CPU only while serving) is safe since scheduled
+# jobs are triggered externally instead of by an in-process timer.
+if [[ "$RUN_CPU_THROTTLING" == "true" ]]; then
+  cpu_throttling_flag="--cpu-throttling"
+else
+  cpu_throttling_flag="--no-cpu-throttling"
+fi
 
 # ─── Deploy ──────────────────────────────────────────────────────────────────
 
@@ -71,7 +97,7 @@ gcloud_q run deploy "$SERVICE" \
   --cpu="$RUN_CPU" \
   --min-instances="$RUN_MIN_INSTANCES" \
   --max-instances="$RUN_MAX_INSTANCES" \
-  --no-cpu-throttling \
+  "$cpu_throttling_flag" \
   --concurrency="$RUN_CONCURRENCY" \
   --timeout=300 \
   --network=default \

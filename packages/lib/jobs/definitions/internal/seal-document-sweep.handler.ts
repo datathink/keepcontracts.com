@@ -10,7 +10,8 @@ import type { TSealDocumentSweepJobDefinition } from './seal-document-sweep';
 export const run = async ({ io }: { payload: TSealDocumentSweepJobDefinition; io: JobRunIO }) => {
   const now = DateTime.now();
   const fifteenMinutesAgo = now.minus({ minutes: 15 }).toJSDate();
-  const sixHoursAgo = now.minus({ hours: 6 }).toJSDate();
+  // KeepContracts: 25h (upstream 6h) so a once-a-day sweep covers every document.
+  const retryWindowStart = now.minus({ hours: 25 }).toJSDate();
 
   // Find all PENDING envelopes that should have been sealed but weren't.
   //
@@ -19,7 +20,7 @@ export const run = async ({ io }: { payload: TSealDocumentSweepJobDefinition; io
   //   2. Any recipient has REJECTED (rejection triggers immediate seal)
   //
   // We only look at documents where the last action was between 15 minutes
-  // and 6 hours ago. The lower bound avoids racing with the normal seal-document
+  // and 25 hours ago. The lower bound avoids racing with the normal seal-document
   // job that fires on completion. The upper bound stops us from endlessly retrying
   // documents that are stuck due to a deeper issue (e.g. corrupt PDF).
   const unsealedEnvelopes = await kyselyPrisma.$kysely
@@ -64,14 +65,14 @@ export const run = async ({ io }: { payload: TSealDocumentSweepJobDefinition; io
         ),
       ),
     )
-    // Exclude envelopes where all activity is older than 6 hours.
+    // Exclude envelopes where all activity is older than 25 hours.
     // These are likely stuck due to a deeper issue and should not be retried.
     .where((eb) =>
       eb.exists(
         eb
           .selectFrom('Recipient')
           .whereRef('Recipient.envelopeId', '=', 'Envelope.id')
-          .where('Recipient.signedAt', '>', sixHoursAgo),
+          .where('Recipient.signedAt', '>', retryWindowStart),
       ),
     )
     .limit(100)
