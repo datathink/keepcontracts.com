@@ -29,7 +29,7 @@ scheduler_args=(
   --http-method=POST
   --attempt-deadline=300s
   --max-retry-attempts=3
-  --min-backoff=5m
+  --min-backoff=11m
 )
 
 if gcloud_q scheduler jobs describe "$CRON_JOB" --location="$REGION" >/dev/null 2>&1; then
