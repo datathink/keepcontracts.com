@@ -73,6 +73,18 @@ secret_put() {
   fi
 }
 
+# secret_sync NAME VALUE  — like secret_put, but skips writing when the latest
+# version already holds VALUE, so re-runs don't pile up versions. Returns 1 when
+# nothing was written.
+secret_sync() {
+  local name="$1" value="$2"
+  if secret_exists "$name" &&
+    [[ "$(gcloud_q secrets versions access latest --secret="$name" 2>/dev/null)" == "$value" ]]; then
+    return 1
+  fi
+  secret_put "$name" "$value"
+}
+
 # The runtime service account Cloud Run uses (default Compute Engine SA unless
 # RUNTIME_SA is set in config.sh).
 runtime_sa() {

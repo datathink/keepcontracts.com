@@ -43,6 +43,10 @@ const STUCK_JOB_MIN_AGE_MS = 15 * 60 * 1000; // 15 minutes
 const STUCK_JOB_MAX_AGE_MS = 48 * 60 * 60 * 1000; // 48 hours
 const STUCK_JOB_BATCH_SIZE = 100;
 
+// KeepContracts: a scheduled run still PROCESSING after this long was killed mid-run
+// (the cron request is capped at 300s by Cloud Run), so it can be reclaimed.
+const STALE_CRON_RUN_MS = 10 * 60 * 1000; // 10 minutes
+
 export class LocalJobProvider extends BaseJobProvider {
   private static _instance: LocalJobProvider;
 
@@ -239,11 +243,18 @@ export class LocalJobProvider extends BaseJobProvider {
           throw error;
         });
 
-      // Claim the run. Completed or in-progress runs are left alone.
+      // Claim the run. Completed or in-progress runs are left alone, but a run stuck
+      // PROCESSING past the request timeout is reclaimed so a retry can finish it.
       const claimed = await prisma.backgroundJob.updateMany({
         where: {
           id: jobId,
-          status: { in: [BackgroundJobStatus.PENDING, BackgroundJobStatus.FAILED] },
+          OR: [
+            { status: { in: [BackgroundJobStatus.PENDING, BackgroundJobStatus.FAILED] } },
+            {
+              status: BackgroundJobStatus.PROCESSING,
+              updatedAt: { lte: new Date(Date.now() - STALE_CRON_RUN_MS) },
+            },
+          ],
         },
         data: {
           status: BackgroundJobStatus.PROCESSING,
@@ -272,10 +283,16 @@ export class LocalJobProvider extends BaseJobProvider {
       } catch (error) {
         console.error(`[JOBS]: Scheduled job ${definition.id} failed`, error);
 
-        await prisma.backgroundJob.update({
-          where: { id: jobId },
-          data: { status: BackgroundJobStatus.FAILED, completedAt: new Date() },
-        });
+        // Don't let a failed status write abort the remaining jobs. A row left
+        // PROCESSING is reclaimed by the next call once it goes stale.
+        await prisma.backgroundJob
+          .update({
+            where: { id: jobId },
+            data: { status: BackgroundJobStatus.FAILED, completedAt: new Date() },
+          })
+          .catch((updateError: unknown) => {
+            console.error(`[JOBS]: Failed to mark scheduled job ${definition.id} as failed`, updateError);
+          });
 
         results[definition.id] = 'failed';
       }

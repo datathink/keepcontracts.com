@@ -54,19 +54,26 @@ fi
 
 # ─── Optional secrets ────────────────────────────────────────────────────────
 
+# Write an optional secret only when its value changed, so re-runs stay idempotent.
+sync_optional_secret() {
+  local name="$1" value="$2" label="$3"
+  if secret_sync "$name" "$value"; then
+    info "Stored ${label} in secret '${name}'."
+  else
+    info "Secret '${name}' already up to date, leaving as-is."
+  fi
+}
+
 if [[ -n "${SIGNING_PASSPHRASE:-}" ]]; then
-  secret_put "$PASSPHRASE_SECRET" "$SIGNING_PASSPHRASE"
-  info "Stored signing passphrase in secret '${PASSPHRASE_SECRET}'."
+  sync_optional_secret "$PASSPHRASE_SECRET" "$SIGNING_PASSPHRASE" "signing passphrase"
 fi
 
 if [[ -n "${SMTP_PASSWORD:-}" ]]; then
-  secret_put "$SMTP_PASSWORD_SECRET" "$SMTP_PASSWORD"
-  info "Stored SMTP password in secret '${SMTP_PASSWORD_SECRET}'."
+  sync_optional_secret "$SMTP_PASSWORD_SECRET" "$SMTP_PASSWORD" "SMTP password"
 fi
 
 if [[ -n "${GOOGLE_CLIENT_SECRET:-}" ]]; then
-  secret_put "$GOOGLE_CLIENT_SECRET_NAME" "$GOOGLE_CLIENT_SECRET"
-  info "Stored Google OAuth client secret in secret '${GOOGLE_CLIENT_SECRET_NAME}'."
+  sync_optional_secret "$GOOGLE_CLIENT_SECRET_NAME" "$GOOGLE_CLIENT_SECRET" "Google OAuth client secret"
 fi
 
 # ─── IAM ─────────────────────────────────────────────────────────────────────
