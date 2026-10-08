@@ -12,6 +12,7 @@ echo "  • Cloud Run service:      ${SERVICE}"
 echo "  • Cloud Run job:          ${SERVICE}-migrate (if present)"
 echo "  • Cloud SQL instance:     ${DB_INSTANCE}  (INCLUDING ALL DATA)"
 echo "  • Artifact Registry repo: ${REPO}"
+echo "  • Cloud Scheduler job:    ${SERVICE}-cron"
 echo "  • Secrets:                ${SECRET_PREFIX}-*"
 echo
 read -r -p "Type the project id (${PROJECT_ID}) to confirm: " confirm
@@ -19,12 +20,13 @@ read -r -p "Type the project id (${PROJECT_ID}) to confirm: " confirm
 
 del() { info "Deleting: $*"; "$@" || warn "  (already gone or failed, continuing)"; }
 
+del gcloud_q scheduler jobs delete "${SERVICE}-cron" --location="$REGION" --quiet
 del gcloud_q run services delete "$SERVICE" --region="$REGION" --quiet
 del gcloud_q run jobs delete "${SERVICE}-migrate" --region="$REGION" --quiet
 del gcloud_q sql instances delete "$DB_INSTANCE" --quiet
 del gcloud_q artifacts repositories delete "$REPO" --location="$REGION" --quiet
 
-for s in enc-key enc-secondary nextauth db-url signing-cert signing-passphrase smtp-password; do
+for s in enc-key enc-secondary nextauth db-url signing-cert signing-passphrase smtp-password cron-secret; do
   del gcloud_q secrets delete "${SECRET_PREFIX}-${s}" --quiet
 done
 

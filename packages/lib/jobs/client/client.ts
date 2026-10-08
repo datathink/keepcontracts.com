@@ -39,4 +39,12 @@ export class JobClient<T extends ReadonlyArray<JobDefinition> = []> {
   public startCron() {
     this._provider.startCron();
   }
+
+  /**
+   * KeepContracts: run all cron jobs once. Called by an external scheduler
+   * (POST /api/cron/run) when NEXT_PRIVATE_JOBS_EXTERNAL_CRON=true.
+   */
+  public async runScheduledJobs() {
+    return this._provider.runScheduledJobs();
+  }
 }

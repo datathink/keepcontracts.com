@@ -13,6 +13,7 @@ CERT_SECRET="${SECRET_PREFIX}-signing-cert"
 PASSPHRASE_SECRET="${SECRET_PREFIX}-signing-passphrase"
 SMTP_PASSWORD_SECRET="${SECRET_PREFIX}-smtp-password"
 DB_URL_SECRET="${SECRET_PREFIX}-db-url"
+CRON_SECRET_NAME="${SECRET_PREFIX}-cron-secret"
 
 # Create a secret with a random 32-byte hex value only if it doesn't exist yet.
 ensure_random_secret() {
@@ -29,6 +30,7 @@ info "Creating encryption + auth secrets..."
 ensure_random_secret "$ENC_KEY_SECRET"
 ensure_random_secret "$ENC_SECONDARY_SECRET"
 ensure_random_secret "$NEXTAUTH_SECRET_NAME"
+ensure_random_secret "$CRON_SECRET_NAME"
 
 # ─── Signing certificate ─────────────────────────────────────────────────────
 
@@ -72,6 +74,7 @@ secrets_to_bind=(
   "$NEXTAUTH_SECRET_NAME"
   "$CERT_SECRET"
   "$DB_URL_SECRET"
+  "$CRON_SECRET_NAME"
 )
 [[ -n "${SIGNING_PASSPHRASE:-}" ]] && secrets_to_bind+=("$PASSPHRASE_SECRET")
 [[ -n "${SMTP_PASSWORD:-}" ]] && secrets_to_bind+=("$SMTP_PASSWORD_SECRET")

@@ -41,11 +41,19 @@ export WEBAPP_URL="https://keepcontracts.com"
 
 export RUN_MEMORY="2Gi"
 export RUN_CPU="1"
-# Keep at least 1 warm instance: the default in-process background-jobs provider
-# ("local") only runs scheduled work while an instance is alive.
+# Scheduled jobs are triggered by Cloud Scheduler (see CRON_SCHEDULE below), so
+# the service can scale to zero with CPU only billed while serving requests:
+#   RUN_MIN_INSTANCES="0" and RUN_CPU_THROTTLING="true"
 export RUN_MIN_INSTANCES="1"
+export RUN_CPU_THROTTLING="false"
 export RUN_MAX_INSTANCES="10"
 export RUN_CONCURRENCY="40"
+
+# ─── Scheduled jobs ──────────────────────────────────────────────────────────
+
+# When Cloud Scheduler calls POST /api/cron/run to run all scheduled jobs.
+export CRON_SCHEDULE="0 8 * * *" # 8am daily
+export CRON_TIME_ZONE="America/Denver"
 
 # ─── Storage ─────────────────────────────────────────────────────────────────
 
