@@ -81,3 +81,17 @@ export SIGNING_CERT_CN="KeepContracts Signing Certificate"
 # ─── App settings ─────────────────────────────────────────────────────────────
 
 export DISABLE_SIGNUP="true" # disable public signups
+
+# ─── Google sign-in (optional) ───────────────────────────────────────────────
+
+# OAuth client from APIs & Services > Credentials. The secret is stored in
+# Secret Manager by 02-secrets.sh.
+export GOOGLE_CLIENT_ID=""
+export GOOGLE_CLIENT_SECRET=""
+
+# ─── Vertex AI (optional) ────────────────────────────────────────────────────
+
+# Enables the AI features. Authenticates as RUNTIME_SA, which needs
+# roles/aiplatform.user, so set RUNTIME_SA above too.
+export GOOGLE_VERTEX_PROJECT_ID=""
+# export GOOGLE_VERTEX_LOCATION="global"

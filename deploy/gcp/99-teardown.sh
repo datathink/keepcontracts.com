@@ -26,7 +26,7 @@ del gcloud_q run jobs delete "${SERVICE}-migrate" --region="$REGION" --quiet
 del gcloud_q sql instances delete "$DB_INSTANCE" --quiet
 del gcloud_q artifacts repositories delete "$REPO" --location="$REGION" --quiet
 
-for s in enc-key enc-secondary nextauth db-url signing-cert signing-passphrase smtp-password cron-secret; do
+for s in enc-key enc-secondary nextauth db-url signing-cert signing-passphrase smtp-password cron-secret google-client-secret; do
   del gcloud_q secrets delete "${SECRET_PREFIX}-${s}" --quiet
 done
 

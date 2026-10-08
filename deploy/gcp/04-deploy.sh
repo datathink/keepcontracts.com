@@ -40,6 +40,20 @@ if [[ -n "${WEBAPP_URL:-}" ]]; then
   env_kv+=("NEXT_PUBLIC_WEBAPP_URL=${WEBAPP_URL}")
 fi
 
+if [[ -n "${GOOGLE_CLIENT_ID:-}" ]]; then
+  env_kv+=("NEXT_PRIVATE_GOOGLE_CLIENT_ID=${GOOGLE_CLIENT_ID}")
+fi
+
+# Vertex AI authenticates as the runtime service account (RUNTIME_SA), which
+# needs roles/aiplatform.user.
+if [[ -n "${GOOGLE_VERTEX_PROJECT_ID:-}" ]]; then
+  env_kv+=(
+    "GOOGLE_VERTEX_PROJECT_ID=${GOOGLE_VERTEX_PROJECT_ID}"
+    "GOOGLE_VERTEX_USE_ADC=true"
+  )
+  [[ -n "${GOOGLE_VERTEX_LOCATION:-}" ]] && env_kv+=("GOOGLE_VERTEX_LOCATION=${GOOGLE_VERTEX_LOCATION}")
+fi
+
 env_str="$(IFS='|'; printf '%s' "${env_kv[*]}")"
 
 # ─── Secrets ─────────────────────────────────────────────────────────────────
@@ -56,6 +70,7 @@ secret_kv=(
 )
 [[ -n "${SMTP_PASSWORD:-}" ]] && secret_kv+=("NEXT_PRIVATE_SMTP_PASSWORD=${SECRET_PREFIX}-smtp-password:latest")
 [[ -n "${SIGNING_PASSPHRASE:-}" ]] && secret_kv+=("NEXT_PRIVATE_SIGNING_PASSPHRASE=${SECRET_PREFIX}-signing-passphrase:latest")
+[[ -n "${GOOGLE_CLIENT_SECRET:-}" ]] && secret_kv+=("NEXT_PRIVATE_GOOGLE_CLIENT_SECRET=${SECRET_PREFIX}-google-client-secret:latest")
 
 secret_str="$(IFS=','; printf '%s' "${secret_kv[*]}")"
 

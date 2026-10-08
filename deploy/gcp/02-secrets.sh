@@ -14,6 +14,7 @@ PASSPHRASE_SECRET="${SECRET_PREFIX}-signing-passphrase"
 SMTP_PASSWORD_SECRET="${SECRET_PREFIX}-smtp-password"
 DB_URL_SECRET="${SECRET_PREFIX}-db-url"
 CRON_SECRET_NAME="${SECRET_PREFIX}-cron-secret"
+GOOGLE_CLIENT_SECRET_NAME="${SECRET_PREFIX}-google-client-secret"
 
 # Create a secret with a random 32-byte hex value only if it doesn't exist yet.
 ensure_random_secret() {
@@ -63,6 +64,11 @@ if [[ -n "${SMTP_PASSWORD:-}" ]]; then
   info "Stored SMTP password in secret '${SMTP_PASSWORD_SECRET}'."
 fi
 
+if [[ -n "${GOOGLE_CLIENT_SECRET:-}" ]]; then
+  secret_put "$GOOGLE_CLIENT_SECRET_NAME" "$GOOGLE_CLIENT_SECRET"
+  info "Stored Google OAuth client secret in secret '${GOOGLE_CLIENT_SECRET_NAME}'."
+fi
+
 # ─── IAM ─────────────────────────────────────────────────────────────────────
 
 SA="$(runtime_sa)"
@@ -78,6 +84,7 @@ secrets_to_bind=(
 )
 [[ -n "${SIGNING_PASSPHRASE:-}" ]] && secrets_to_bind+=("$PASSPHRASE_SECRET")
 [[ -n "${SMTP_PASSWORD:-}" ]] && secrets_to_bind+=("$SMTP_PASSWORD_SECRET")
+[[ -n "${GOOGLE_CLIENT_SECRET:-}" ]] && secrets_to_bind+=("$GOOGLE_CLIENT_SECRET_NAME")
 
 for s in "${secrets_to_bind[@]}"; do
   if secret_exists "$s"; then
