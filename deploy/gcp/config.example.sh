@@ -42,10 +42,10 @@ export WEBAPP_URL="https://keepcontracts.com"
 export RUN_MEMORY="2Gi"
 export RUN_CPU="1"
 # Scheduled jobs are triggered by Cloud Scheduler (see CRON_SCHEDULE below), so
-# the service can scale to zero with CPU only billed while serving requests:
-#   RUN_MIN_INSTANCES="0" and RUN_CPU_THROTTLING="true"
-export RUN_MIN_INSTANCES="1"
-export RUN_CPU_THROTTLING="false"
+# the service scales to zero with CPU only billed while serving requests. Set
+# RUN_MIN_INSTANCES="1" to avoid cold starts (idle instances bill at a lower rate).
+export RUN_MIN_INSTANCES="0"
+export RUN_CPU_THROTTLING="true"
 export RUN_MAX_INSTANCES="10"
 export RUN_CONCURRENCY="40"
 
