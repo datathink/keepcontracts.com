@@ -103,9 +103,10 @@ gcloud run domain-mappings create \
   Scheduler calls `POST /api/cron/run` once a day (`CRON_SCHEDULE`), with
   `Authorization: Bearer <cron-secret>`. That call runs every scheduled job once
   and re-sends recent jobs whose dispatch was dropped. Because nothing needs CPU
-  between requests, you can set `RUN_MIN_INSTANCES=0` and
-  `RUN_CPU_THROTTLING=true` to scale to zero. For heavier setups, switch to
-  `bullmq` backed by Memorystore (Redis) or Inngest.
+  between requests, the defaults are `RUN_MIN_INSTANCES=0` and
+  `RUN_CPU_THROTTLING=true` (scale to zero, CPU billed only while serving).
+  For heavier setups, switch to `bullmq` backed by Memorystore (Redis) or
+  Inngest.
 
 ## Troubleshooting
 
